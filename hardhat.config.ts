@@ -18,6 +18,12 @@ const config: HardhatUserConfig = {
     deployer: {
       default: 0,
     },
+    alice: {
+      default: 1,
+    },
+    bob: {
+      default: 2,
+    }
   },
 };
 
