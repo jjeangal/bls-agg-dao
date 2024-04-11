@@ -6,7 +6,7 @@ import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20P
 import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
 
-contract MyToken is ERC20, ERC20Permit, ERC20Votes {
+contract GovernanceToken is ERC20, ERC20Permit, ERC20Votes {
     uint256 public supply = 1000000000000000000000000;
 
     constructor()
