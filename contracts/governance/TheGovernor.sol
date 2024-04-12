@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Compatible with OpenZeppelin Contracts ^5.0.0
-pragma solidity ^0.8.20;
+pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
@@ -21,12 +21,15 @@ contract TheGovernor is
 {
     constructor(
         IVotes _token,
-        TimelockController _timelock
+        TimelockController _timelock,
+        uint48 _votingDelay,
+        uint32 _votingPeriod,
+        uint256 _quorumPercentage
     )
         Governor("TheGovernor")
-        GovernorSettings(7200 /* 1 day */, 50400 /* 1 week */, 0)
+        GovernorSettings(_votingDelay, _votingPeriod, 0)
         GovernorVotes(_token)
-        GovernorVotesQuorumFraction(20)
+        GovernorVotesQuorumFraction(_quorumPercentage)
         GovernorTimelockControl(_timelock)
     {}
 
