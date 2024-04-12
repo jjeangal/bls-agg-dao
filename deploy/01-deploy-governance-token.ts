@@ -9,7 +9,7 @@ const deployGovernanceToken: DeployFunction = async function (
     // Hardhat runtime environment
     const { getNamedAccounts, deployments, network } = hre;
     const { deploy, log } = deployments;
-    const { deployer, alice, bob } = await getNamedAccounts();
+    const { deployer } = await getNamedAccounts();
 
     // Deploy the GovernanceToken contract
     log("----------------------------------------------------");
