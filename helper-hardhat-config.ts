@@ -21,4 +21,6 @@ export const MIN_DELAY = 3600 // 1 hour - after a vote passes, you have 1 hour b
 
 export const VOTING_DELAY = 1 // Number of blocks till a proposal vote becomes active
 export const VOTING_PERIOD = 5 // Number or blocks
-export const QUORUM_PERCENTAGE = 20 // % of voters to pass
+export const QUORUM_PERCENTAGE = 20 // % of voters to pas
+
+export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
