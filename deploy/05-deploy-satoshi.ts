@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
+import { networkConfig } from "../helper-hardhat-config"
 import { ethers } from "hardhat";
 
 const deploySatoshi: DeployFunction = async function (
@@ -7,7 +8,7 @@ const deploySatoshi: DeployFunction = async function (
 ) {
 
     // Hardhat runtime environment
-    const { getNamedAccounts, deployments } = hre;
+    const { getNamedAccounts, deployments, network } = hre;
     const { deploy, log, get } = deployments;
     const { deployer } = await getNamedAccounts();
 
@@ -17,8 +18,11 @@ const deploySatoshi: DeployFunction = async function (
     const satoshi = await deploy('Satoshi', {
         from: deployer,
         args: [deployer],
-        log: true
+        log: true,
+        waitConfirmations: networkConfig[network.name].blockConfirmations || 1,
     });
+
+    log(`Satoshi deployed at address ${satoshi.address}`)
 
     // Get Contract Deployment
     const timeLockDeployment = await deployments.get('TimeLock');
@@ -32,6 +36,8 @@ const deploySatoshi: DeployFunction = async function (
         timeLock.address
     );
     await transferOwnershipTx.wait(1);
+
+    log("----------------------------------------------------");
 };
 
 export default deploySatoshi;
