@@ -24,3 +24,7 @@ export const VOTING_PERIOD = 5 // Number or blocks
 export const QUORUM_PERCENTAGE = 20 // % of voters to pass
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
+export const ADDRESS_SATOSHI = "0x4df30AF0237E9a5c29D0f49a18Cb6f46692e3c71"
+
+export const FUNCTION = "updateSatoshi"
+export const PROPOSAL_DESCRIPTION = "Proposal #1: I am Satoshi Nakamoto."
