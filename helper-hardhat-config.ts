@@ -17,6 +17,8 @@ export const networkConfig: networkConfigInfo = {
 
 export const developmentChains = ["hardhat", "localhost"]
 
+export const proposalsFile = "./proposals.json";
+
 export const MIN_DELAY = 3600 // 1 hour - after a vote passes, you have 1 hour before you can enact
 
 export const VOTING_DELAY = 1 // Number of blocks till a proposal vote becomes active
