@@ -15,5 +15,8 @@
     "typechain": "^8.3.2",
     "typescript": "^5.4.5"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  }
 }
