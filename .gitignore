@@ -6,3 +6,5 @@ node_modules
 
 /typechain-types
 /deployments
+
+/proposals.json
