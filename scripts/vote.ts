@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import {
     proposalsFile,
     developmentChains,
-    VOTING_DELAY
+    VOTING_PERIOD
 } from '../helper-hardhat-config';
 import { moveBlock } from "../utils/move-blocks"
 import theGovernorData from "../deployments/localhost/TheGovernor.json"
@@ -19,7 +19,7 @@ export async function vote(proposalIndex: number) {
     const voteType = 1;
 
     // Get the Governor contract
-    const theGovernor = await ethers.getContractAt('Governor', theGovernorData.address);
+    const theGovernor = await ethers.getContractAt('TheGovernor', theGovernorData.address);
 
     // Set the reason for voting
     const reason = "He his a cryptography expert";
@@ -37,12 +37,13 @@ export async function vote(proposalIndex: number) {
     const voteTxReceipt = await voteTx.wait(1);
     console.log(`Voted with args:\n  - ${voteTxReceipt.events[0].args.join("\n  - ")}`)
 
+    if (developmentChains.includes(network.name)) {
+        await moveBlock(VOTING_PERIOD + 1);
+    }
+
     const proposalState = await theGovernor.state(proposalId)
     console.log(`State of the current proposal:\n  ${proposalState}`)
 
-    if (developmentChains.includes(network.name)) {
-        await moveBlock(VOTING_DELAY + 1);
-    }
 }
 
 vote(index)
