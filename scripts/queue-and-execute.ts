@@ -15,9 +15,10 @@ import { moveBlock } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 
 export async function queueAndExecute() {
+
     // Get contracts
-    const satoshi = await ethers.getContractAt('Satoshi', satoshiData.address);
-    const theGovernor = await ethers.getContractAt('Governor', theGovernorData.address);
+    const satoshi = await ethers.getContractAt(satoshiData.abi, satoshiData.address);
+    const theGovernor = await ethers.getContractAt(theGovernorData.abi, theGovernorData.address);
 
     // Get queue arguments
     const args = [ADDRESS_SATOSHI];
@@ -25,6 +26,7 @@ export async function queueAndExecute() {
         FUNCTION,
         args
     );
+
     const descriptionHash = ethers.utils.keccak256(
         ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION)
     );
@@ -56,15 +58,16 @@ export async function queueAndExecute() {
     );
     await executeTx.wait(1);
 
+    console.log("Queue and Execute completed successfully!")
+    console.log("----------------------------------------------------");
     const satoshiValue = await satoshi.getSatoshi();
     console.log(`New Satoshi value: ${satoshiValue}`);
 }
 
 queueAndExecute()
-    .then(
-        () => process.exit(0)
-    )
-    .catch((error) => {
+    .then(() => {
+        process.exit(0)
+    }).catch((error) => {
         console.error(error)
         process.exit(1)
     })
