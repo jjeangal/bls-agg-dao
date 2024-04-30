@@ -9,12 +9,12 @@ const setupContracts: DeployFunction = async function (
 ) {
     // Hardhat runtime environment
     const { getNamedAccounts, deployments } = hre;
-    const { deploy, log } = deployments;
+    const { log } = deployments;
     const { deployer } = await getNamedAccounts();
 
     // Get Contract Deployments
     const timeLockDeployment = await deployments.get('TimeLock');
-    const governorDeployment = await deployments.get('TimeLock');
+    const governorDeployment = await deployments.get('TheGovernor');
 
     // Get both the Governor and the TimeLock contract
     const timeLock = await ethers.getContractAt('TimeLock', timeLockDeployment.address);
