@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Compatible with OpenZeppelin Contracts ^5.0.0
-pragma solidity 0.8.24;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
-import "@openzeppelin/contracts/governance/extensions/GovernorStorage.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
@@ -14,7 +13,6 @@ contract TheGovernor is
     Governor,
     GovernorSettings,
     GovernorCountingSimple,
-    GovernorStorage,
     GovernorVotes,
     GovernorVotesQuorumFraction,
     GovernorTimelockControl
@@ -88,17 +86,6 @@ contract TheGovernor is
         returns (uint256)
     {
         return super.proposalThreshold();
-    }
-
-    function _propose(
-        address[] memory targets,
-        uint256[] memory values,
-        bytes[] memory calldatas,
-        string memory description,
-        address proposer
-    ) internal override(Governor, GovernorStorage) returns (uint256) {
-        return
-            super._propose(targets, values, calldatas, description, proposer);
     }
 
     function _queueOperations(
