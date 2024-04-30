@@ -20,8 +20,8 @@ export async function propose(
     args: any[],
     proposalDescription: string
 ) {
-    const theGovernor = await ethers.getContractAt('TheGovernor', theGovernorData.address);
-    const satoshi = await ethers.getContractAt('Satoshi', satoshiData.address);
+    const theGovernor = await ethers.getContractAt(theGovernorData.abi, theGovernorData.address);
+    const satoshi = await ethers.getContractAt(satoshiData.abi, satoshiData.address);
 
     const encodedFunctionCall = satoshi.interface.encodeFunctionData(
         functionCalled,

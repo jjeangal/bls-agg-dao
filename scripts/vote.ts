@@ -19,7 +19,7 @@ export async function vote(proposalIndex: number) {
     const voteType = 1;
 
     // Get the Governor contract
-    const theGovernor = await ethers.getContractAt('TheGovernor', theGovernorData.address);
+    const theGovernor = await ethers.getContractAt(theGovernorData.abi, theGovernorData.address);
 
     // Set the reason for voting
     const reason = "He his a cryptography expert";
