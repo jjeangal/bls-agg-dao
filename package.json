@@ -17,6 +17,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@chainsafe/bls": "^8.1.0",
+    "@chainsafe/blst": "^1.0.1",
     "fs": "^0.0.1-security"
   }
 }
