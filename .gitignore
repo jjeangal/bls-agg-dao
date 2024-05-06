@@ -8,3 +8,5 @@ node_modules
 /deployments
 
 /proposals.json
+
+key-pairs.json
