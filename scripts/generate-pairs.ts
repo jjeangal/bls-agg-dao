@@ -3,37 +3,24 @@ import fs from "fs";
 import crypto from "crypto";
 import {
     keyPairsFile,
+    KeyPair,
     PAIRAMOUNT
 } from "../helper-crypto-config";
 
-interface KeyPair {
-    sk: Uint8Array;
-    pk: Uint8Array;
-}
+export async function generateKeyPairs(count: number) {
+    const keyPairs: KeyPair[] = [];
 
-function generateKeyPairs(count: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-        const keyPairs: KeyPair[] = [];
+    for (let i = 0; i < count; i++) {
+        // Generate a random 32-byte buffer for the IKM
+        const ikm = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
 
-        try {
-            // Generate a random 32-byte buffer for the IKM
-            const ikm = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+        const sk = bls.SecretKey.fromKeygen(ikm);
+        const pk = sk.toPublicKey().serialize();
 
-            for (let i = 0; i < count; i++) {
-                const sk = bls.SecretKey.fromKeygen(ikm);
-                const pk = sk.toPublicKey().serialize();
+        keyPairs.push({ sk: sk.serialize(), pk });
+    }
 
-                console.log(sk);
-
-                keyPairs.push({ sk: sk.serialize(), pk });
-            }
-
-            storeKeyPairs(keyPairs);
-            resolve();
-        } catch (error) {
-            reject(error);
-        }
-    });
+    storeKeyPairs(keyPairs);
 }
 
 function storeKeyPairs(keyPairs: KeyPair[]) {
