@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.24;
 
-import {BLSGovernor} from "./BLSGovernor.sol";
+import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFractio
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
 contract TheGovernor is
-    BLSGovernor,
+    Governor,
     GovernorSettings,
     GovernorCountingSimple,
     GovernorVotes,
@@ -23,7 +23,7 @@ contract TheGovernor is
         uint32 _votingPeriod,
         uint256 _quorumPercentage
     )
-        BLSGovernor("TheGovernor")
+        Governor("TheGovernor")
         GovernorSettings(_votingDelay, _votingPeriod, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(_quorumPercentage)
@@ -35,7 +35,7 @@ contract TheGovernor is
     function votingDelay()
         public
         view
-        override(BLSGovernor, GovernorSettings)
+        override(Governor, GovernorSettings)
         returns (uint256)
     {
         return super.votingDelay();
@@ -44,7 +44,7 @@ contract TheGovernor is
     function votingPeriod()
         public
         view
-        override(BLSGovernor, GovernorSettings)
+        override(Governor, GovernorSettings)
         returns (uint256)
     {
         return super.votingPeriod();
@@ -55,7 +55,7 @@ contract TheGovernor is
     )
         public
         view
-        override(BLSGovernor, GovernorVotesQuorumFraction)
+        override(Governor, GovernorVotesQuorumFraction)
         returns (uint256)
     {
         return super.quorum(blockNumber);
@@ -66,7 +66,7 @@ contract TheGovernor is
     )
         public
         view
-        override(BLSGovernor, GovernorTimelockControl)
+        override(Governor, GovernorTimelockControl)
         returns (ProposalState)
     {
         return super.state(proposalId);
@@ -74,19 +74,14 @@ contract TheGovernor is
 
     function proposalNeedsQueuing(
         uint256 proposalId
-    )
-        public
-        view
-        override(BLSGovernor, GovernorTimelockControl)
-        returns (bool)
-    {
+    ) public view override(Governor, GovernorTimelockControl) returns (bool) {
         return super.proposalNeedsQueuing(proposalId);
     }
 
     function proposalThreshold()
         public
         view
-        override(BLSGovernor, GovernorSettings)
+        override(Governor, GovernorSettings)
         returns (uint256)
     {
         return super.proposalThreshold();
@@ -98,7 +93,7 @@ contract TheGovernor is
         uint256[] memory values,
         bytes[] memory calldatas,
         bytes32 descriptionHash
-    ) internal override(BLSGovernor, GovernorTimelockControl) returns (uint48) {
+    ) internal override(Governor, GovernorTimelockControl) returns (uint48) {
         return
             super._queueOperations(
                 proposalId,
@@ -115,7 +110,7 @@ contract TheGovernor is
         uint256[] memory values,
         bytes[] memory calldatas,
         bytes32 descriptionHash
-    ) internal override(BLSGovernor, GovernorTimelockControl) {
+    ) internal override(Governor, GovernorTimelockControl) {
         super._executeOperations(
             proposalId,
             targets,
@@ -130,18 +125,14 @@ contract TheGovernor is
         uint256[] memory values,
         bytes[] memory calldatas,
         bytes32 descriptionHash
-    )
-        internal
-        override(BLSGovernor, GovernorTimelockControl)
-        returns (uint256)
-    {
+    ) internal override(Governor, GovernorTimelockControl) returns (uint256) {
         return super._cancel(targets, values, calldatas, descriptionHash);
     }
 
     function _executor()
         internal
         view
-        override(BLSGovernor, GovernorTimelockControl)
+        override(Governor, GovernorTimelockControl)
         returns (address)
     {
         return super._executor();
