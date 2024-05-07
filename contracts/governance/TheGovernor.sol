@@ -30,6 +30,29 @@ contract TheGovernor is
         GovernorTimelockControl(_timelock)
     {}
 
+    /**
+     * @dev The provided signature is not valid for the expected `voters`.
+     * //  If the `voter` is a contract, the signature is not valid using {IERC1271-isValidSignature}.  // - from Governor
+     */
+    error GovernorInvalidAggSignature(/** address voter */);
+
+    event AggVoteCast(
+        uint256 numberOfVotes,
+        uint256 proposalId,
+        uint8 support,
+        uint256 weight,
+        string reason
+    );
+
+    event AggVoteCastWithParams(
+        uint256 numberOfVotes,
+        uint256 proposalId,
+        uint8 support,
+        uint256 weight,
+        string reason,
+        bytes params
+    );
+
     // The following functions are overrides required by Solidity.
 
     function votingDelay()
@@ -85,6 +108,69 @@ contract TheGovernor is
         returns (uint256)
     {
         return super.proposalThreshold();
+    }
+
+    function castVoteByAggSig(
+        uint256 proposalId,
+        uint8 support,
+        string memory reason,
+        bytes memory params
+    ) public virtual returns (uint256) {
+        bool valid = false;
+        if (!valid) {
+            revert GovernorInvalidAggSignature();
+        }
+        return _castVoteAgg(proposalId, support, reason, params);
+    }
+
+    function _castVoteAgg(
+        uint256 proposalId,
+        uint8 support,
+        string memory reason,
+        bytes memory params
+    ) internal virtual returns (uint256) {
+        validateStateBitmap(
+            proposalId,
+            _encodeStateBitmap(ProposalState.Active)
+        );
+
+        uint256 weight = 0;
+
+        if (params.length == 0) {
+            emit AggVoteCast(0, proposalId, support, weight, reason);
+        } else {
+            emit AggVoteCastWithParams(
+                0,
+                proposalId,
+                support,
+                weight,
+                reason,
+                params
+            );
+        }
+
+        return weight;
+    }
+
+    /**
+     * @dev Check that the current state of a proposal matches the requirements described by the `allowedStates` bitmap.
+     * This bitmap should be built using `_encodeStateBitmap`.
+     *
+     * If requirements are not met, reverts with a {GovernorUnexpectedProposalState} error.
+     */
+    function validateStateBitmap(
+        uint256 proposalId,
+        bytes32 allowedStates
+    ) private view returns (ProposalState) {
+        ProposalState currentState = state(proposalId);
+        if (_encodeStateBitmap(currentState) & allowedStates == bytes32(0)) {
+            revert GovernorUnexpectedProposalState(
+                proposalId,
+                currentState,
+                allowedStates
+            );
+        }
+        return currentState;
     }
 
     function _queueOperations(
