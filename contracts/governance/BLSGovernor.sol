@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.0.0) (governance/Governor.sol)
 
 pragma solidity ^0.8.20;
 
@@ -24,7 +23,7 @@ import {IGovernor, IERC6372} from "@openzeppelin/contracts/governance/IGovernor.
  * - A voting module must implement {_getVotes}
  * - Additionally, {votingPeriod} must also be implemented
  */
-abstract contract Governor is
+abstract contract BLSGovernor is
     Context,
     ERC165,
     EIP712,
@@ -785,9 +784,8 @@ abstract contract Governor is
     function _castAggVote(
         uint256 proposalId,
         uint8 support,
-        string memory reason,
+        string memory reason
     ) internal virtual returns (uint256) {
-        
         return 0;
     }
 
