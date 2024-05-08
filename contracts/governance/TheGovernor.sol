@@ -110,6 +110,7 @@ contract TheGovernor is
         return super.proposalThreshold();
     }
 
+    // To be called in the scripts
     function castVoteByAggSig(
         uint256 proposalId,
         uint8 support,
@@ -117,6 +118,9 @@ contract TheGovernor is
         bytes memory params
     ) public virtual returns (uint256) {
         bool valid = false;
+
+        // Verify signature
+
         if (!valid) {
             revert GovernorInvalidAggSignature();
         }
@@ -134,6 +138,7 @@ contract TheGovernor is
             _encodeStateBitmap(ProposalState.Active)
         );
 
+        // Calculate weight of the votes
         uint256 weight = 0;
 
         if (params.length == 0) {
