@@ -2,12 +2,18 @@ import { ethers, network } from 'hardhat';
 import * as fs from 'fs';
 
 import {
+    PROPOSAL_DESCRIPTION,
+} from '../helper-hardhat-config';
+
+import {
     proposalsFile,
     developmentChains,
     VOTING_PERIOD
 } from '../helper-hardhat-config';
 import { moveBlock } from "../utils/move-blocks"
 import theGovernorData from "../deployments/localhost/TheGovernor.json"
+
+import { signProposalMessage } from './sign-message';
 
 const index = 0;
 
@@ -23,6 +29,9 @@ export async function vote(proposalIndex: number) {
 
     // Set the reason for voting
     const reason = "He his a cryptography expert";
+
+    const msgPoint = await signProposalMessage(PROPOSAL_DESCRIPTION);
+    console.log(`Message Point: ${msgPoint}`)
 
     console.log("Voting...");
 
