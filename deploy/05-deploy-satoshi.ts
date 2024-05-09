@@ -36,8 +36,6 @@ const deploySatoshi: DeployFunction = async function (
         timeLock.address
     );
     await transferOwnershipTx.wait(1);
-
-    log("----------------------------------------------------");
 };
 
 export default deploySatoshi;
