@@ -1,0 +1,31 @@
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
+import { networkConfig } from "../helper-hardhat-config"
+import { ethers } from "hardhat";
+
+const deployBLS: DeployFunction = async function (
+    hre: HardhatRuntimeEnvironment
+) {
+
+    // Hardhat runtime environment
+    const { getNamedAccounts, deployments, network } = hre;
+    const { deploy, log, get } = deployments;
+    const { deployer } = await getNamedAccounts();
+
+    log("----------------------------------------------------");
+    log(`Deploying BLS contract...`)
+
+    const bls = await deploy('BLS', {
+        from: deployer,
+        args: [],
+        log: true,
+        waitConfirmations: networkConfig[network.name].blockConfirmations || 1,
+    });
+
+    log(`BLS deployed at address ${bls.address}`);
+
+    //const blsContract = await ethers.getContractAt('Satoshi', bls.address);
+
+}
+
+export default deployBLS;
