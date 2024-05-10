@@ -36,7 +36,8 @@ const deployTheGovernor: DeployFunction = async function (
         from: deployer,
         args: governorArgs,
         log: true,
-        waitConfirmations: networkConfig[network.name].blockConfirmations || 1,
+        gasLimit: 4000000,
+        waitConfirmations: networkConfig[network.name].blockConfirmations || 1
     });
 
     log(`TheGovernor deployed at address ${theGovernor.address}`);
