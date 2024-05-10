@@ -13,7 +13,8 @@
         "hardhat.config.ts",
         "scripts/**/*",
         "deploy/**/*",
-        "test/**/*"
+        "test/**/*",
+        "utils/Hash-to-field.ts"
     ],
     "exclude": [
         "node_modules"
