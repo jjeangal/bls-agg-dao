@@ -6,7 +6,9 @@
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
     "@types/chai": "^4.3.14",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.7",
+    "chai": "^5.1.1",
     "ethers": "^5.7.2",
     "hardhat": "^2.22.2",
     "hardhat-deploy": "^0.12.2",
@@ -19,6 +21,8 @@
   "dependencies": {
     "@chainsafe/bls": "^8.1.0",
     "@chainsafe/blst": "^1.0.1",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "mcl-wasm": "^1.4.0",
+    "mocha": "^10.4.0"
   }
 }
