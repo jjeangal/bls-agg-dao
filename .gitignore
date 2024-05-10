@@ -10,3 +10,5 @@ node_modules
 /proposals.json
 
 key-pairs.json
+
+.env
