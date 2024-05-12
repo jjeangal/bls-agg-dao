@@ -2,7 +2,6 @@
 pragma solidity 0.8.24;
 
 import {BLSLibrary} from "./BLSLibrary.sol";
-import "hardhat/console.sol";
 
 contract BLS {
     // Field order for the elliptic curve y^2 = x^3 + 3
@@ -94,7 +93,7 @@ contract BLS {
                 0
             );
         }
-        require(success, "It's a success!");
+        require(success, "");
         return out[0] != 0;
     }
 
