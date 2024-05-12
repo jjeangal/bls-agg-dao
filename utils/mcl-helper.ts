@@ -38,7 +38,7 @@ export function g2() {
 export function newKeyPair() {
     const secret = randFr();
     const pubkey = mcl.mul(g2(), secret);
-    //pubkey.normalize();
+    pubkey.normalize();
     return { pubkey, secret };
 }
 
