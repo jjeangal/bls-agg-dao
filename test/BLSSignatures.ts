@@ -3,19 +3,15 @@ import { PROPOSAL_DESCRIPTION } from '../helper-hardhat-config';
 import * as mcl from '../utils/mcl-helper';
 import assert from 'assert';
 
-const DOMAIN_STR = 'testing-evmbls';
-
 describe("BLS Contract", function () {
 
     before(async function () {
         await mcl.init();
-        mcl.setDomain(DOMAIN_STR);
+        mcl.setDomain(mcl.DOMAIN_STR);
     });
 
     it("Should perform a valid signature", async function () {
-        mcl.setMappingMode(mcl.MAPPING_MODE_TI);
-        mcl.setDomain('testing evmbls');
-
+        //mcl.setMappingMode(mcl.MAPPING_MODE_TI);
         const BLSContract = await ethers.deployContract("BLS");
 
         const message = PROPOSAL_DESCRIPTION;
