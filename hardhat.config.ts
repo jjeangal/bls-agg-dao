@@ -8,14 +8,23 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       chainId: 31337,
-      allowUnlimitedContractSize: true
+      // allowUnlimitedContractSize: true
     },
     localhost: {
       chainId: 31337,
       allowUnlimitedContractSize: true
     }
   },
-  solidity: "0.8.24",
+  solidity: {
+    version: "0.8.24",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      },
+      evmVersion: "cancun"
+    }
+  },
   namedAccounts: {
     deployer: {
       default: 0,
