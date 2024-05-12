@@ -1,23 +1,18 @@
-import bls from "@chainsafe/blst";
+
 import fs from "fs";
-import crypto from "crypto";
+import * as mcl from '../utils/mcl-helper';
 import {
     keyPairsFile,
     KeyPair,
-    PAIRAMOUNT
+    PAIRAMOUNT,
 } from "../helper-crypto-config";
 
 export async function generateKeyPairs(count: number) {
     const keyPairs: KeyPair[] = [];
 
     for (let i = 0; i < count; i++) {
-        // Generate a random 32-byte buffer for the IKM
-        const ikm = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
-
-        const sk = bls.SecretKey.fromKeygen(ikm);
-        const pk = sk.toPublicKey().serialize();
-
-        keyPairs.push({ sk: sk.serialize(), pk });
+        const { pubkey, secret } = mcl.newKeyPair();
+        keyPairs.push({ secret, pubkey });
     }
 
     storeKeyPairs(keyPairs);
