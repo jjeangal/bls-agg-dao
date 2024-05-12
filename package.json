@@ -19,8 +19,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@chainsafe/bls": "^8.1.0",
-    "@chainsafe/blst": "^1.0.1",
     "fs": "^0.0.1-security",
     "mcl-wasm": "^1.4.0",
     "mocha": "^10.4.0"
