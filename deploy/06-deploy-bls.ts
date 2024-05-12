@@ -14,11 +14,12 @@ const deployBLS: DeployFunction = async function (
     log("----------------------------------------------------");
     log(`Deploying BLS contract...`)
 
-    const bls = await deploy('BLS', {
+    const bls = await deploy('BLSTest', {
         from: deployer,
         args: [],
         log: true,
         waitConfirmations: networkConfig[network.name].blockConfirmations || 1,
+        gasLimit: 30000000
     });
 
     log(`BLS deployed at address ${bls.address}`);
