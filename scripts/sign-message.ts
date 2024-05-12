@@ -1,25 +1,41 @@
-import { ethers } from "hardhat"
-import blsData from "../deployments/localhost/BLS.json"
 import fs from "fs";
-import crypto from "crypto";
+import * as mcl from "../utils/mcl-helper";
+import * as wasm from 'mcl-wasm';
 
 import { KeyPair, keyPairsFile } from "../helper-crypto-config";
+import { BigNumber } from "ethers";
 
-export async function signProposalMessage(message: string, keyPairIndex: number): Promise<Uint8Array> {
+export async function signProposalMessage(
+    message: string,
+    keyPairIndex: number
+): Promise<{
+    msg: BigNumber[],
+    pk: BigNumber[],
+    sig: BigNumber[]
+}> {
+    await mcl.init();
+    mcl.setDomain(mcl.DOMAIN_STR);
 
-    // Get BLS contract
-    const blsContract = await ethers.getContractAt(blsData.abi, blsData.address);
+    const keyPair: KeyPair = await getKeyPairAtIndex(keyPairIndex);
 
-    let msgInBytes: Uint8Array = ethers.utils.toUtf8Bytes(message);
-    const msgPoint: Uint8Array = blsContract.hashToPoint(msgInBytes);
+    const { signature, M } = mcl.sign(message, keyPair.secret);
 
-    console.log(`Message Point: ${msgPoint}`);
+    let msg = mcl.g1ToBN(M);
+    let pk = mcl.g2ToBN(keyPair.pubkey);
+    let sig = mcl.g1ToBN(signature);
 
-    return msgPoint;
+    return { msg, pk, sig };
 }
 
 export async function getKeyPairs(): Promise<KeyPair[]> {
-    const keyPairs: KeyPair[] = JSON.parse(fs.readFileSync(keyPairsFile, 'utf8'));
+    const serializedKeyPairs: { secret: number[], pubkey: number[] }[] = JSON.parse(fs.readFileSync(keyPairsFile, 'utf8'));
+    const keyPairs: KeyPair[] = serializedKeyPairs.map(({ secret, pubkey }) => {
+        const secretFr = new wasm.Fr();
+        secretFr.deserialize(new Uint8Array(secret));
+        const pubkeyG2 = new wasm.G2();
+        pubkeyG2.deserialize(new Uint8Array(pubkey));
+        return { secret: secretFr, pubkey: pubkeyG2 };
+    });
     return keyPairs;
 }
 
