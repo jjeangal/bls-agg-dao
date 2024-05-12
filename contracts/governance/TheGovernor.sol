@@ -112,15 +112,14 @@ contract TheGovernor is
     }
 
     // To be called in the scripts
-    function castVoteByAggSig(
+    function castVoteWithReasonAndBlsSig(
         uint256 proposalId,
         address[] memory accounts,
         uint256[2] memory signature,
         uint256[4] memory pubkey,
         uint256[2] memory message,
         uint8 support,
-        string memory reason,
-        bytes memory params
+        string memory reason
     ) public virtual returns (uint256, uint256[] memory) {
         bool valid = BLS.verifySingle(
             signature,
@@ -131,7 +130,7 @@ contract TheGovernor is
         if (!valid) {
             revert GovernorInvalidAggSignature();
         }
-        return _castVoteAgg(proposalId, accounts, support, reason, params);
+        return _castVoteAgg(proposalId, accounts, support, reason, "");
     }
 
     function _castVoteAgg(
