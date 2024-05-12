@@ -1,6 +1,7 @@
 
 import fs from "fs";
 import * as mcl from '../utils/mcl-helper';
+
 import {
     keyPairsFile,
     KeyPair,
@@ -8,6 +9,8 @@ import {
 } from "../helper-crypto-config";
 
 export async function generateKeyPairs(count: number) {
+    await mcl.init();
+
     const keyPairs: KeyPair[] = [];
 
     for (let i = 0; i < count; i++) {
@@ -18,8 +21,12 @@ export async function generateKeyPairs(count: number) {
     storeKeyPairs(keyPairs);
 }
 
-function storeKeyPairs(keyPairs: KeyPair[]) {
-    fs.writeFileSync(keyPairsFile, JSON.stringify(keyPairs), "utf8");
+async function storeKeyPairs(keyPairs: KeyPair[]) {
+    const serializedKeyPairs = keyPairs.map(({ secret, pubkey }) => ({
+        secret: Array.from(secret.serialize()),
+        pubkey: Array.from(pubkey.serialize()),
+    }));
+    fs.writeFileSync(keyPairsFile, JSON.stringify(serializedKeyPairs), "utf8");
 }
 
 generateKeyPairs(PAIRAMOUNT)
