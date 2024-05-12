@@ -127,7 +127,7 @@ abstract contract GovernorCounting is Governor {
         uint256[] memory weights,
         uint8 support,
         bytes memory // params
-    ) internal virtual returns (ProposalVote storage) {
+    ) internal virtual {
         ProposalVote storage proposalVote = _proposalVotes[proposalId];
 
         uint256 totalWeight = 0;
@@ -149,7 +149,5 @@ abstract contract GovernorCounting is Governor {
         } else {
             revert GovernorInvalidVoteType();
         }
-
-        return _proposalVotes[proposalId];
     }
 }
