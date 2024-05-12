@@ -30,8 +30,7 @@ export async function vote(proposalIndex: number) {
     // Set the reason for voting
     const reason = "He his a cryptography expert";
 
-    const msgPoint = await signProposalMessage(PROPOSAL_DESCRIPTION, 0);
-    console.log(`Message Point: ${msgPoint}`)
+    const { msg, pk, sig } = await signProposalMessage(PROPOSAL_DESCRIPTION, 0);
 
     console.log("Voting...");
 
