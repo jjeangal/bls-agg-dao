@@ -113,10 +113,11 @@ contract TheGovernor is
     // To be called in the scripts
     function castVoteByAggSig(
         uint256 proposalId,
+        address[] memory accounts,
         uint8 support,
         string memory reason,
         bytes memory params
-    ) public virtual returns (uint256) {
+    ) public virtual returns (uint256, uint256[] memory) {
         bool valid = false;
 
         // Verify signature
@@ -124,37 +125,46 @@ contract TheGovernor is
         if (!valid) {
             revert GovernorInvalidAggSignature();
         }
-        return _castVoteAgg(proposalId, support, reason, params);
+        return _castVoteAgg(proposalId, accounts, support, reason, params);
     }
 
     function _castVoteAgg(
         uint256 proposalId,
+        address[] memory accounts,
         uint8 support,
         string memory reason,
         bytes memory params
-    ) internal virtual returns (uint256) {
+    ) internal virtual returns (uint256 totalWeight, uint256[] memory weights) {
         validateStateBitmap(
             proposalId,
             _encodeStateBitmap(ProposalState.Active)
         );
 
-        // Calculate weight of the votes
-        uint256 weight = 0;
+        totalWeight = 0;
+        weights = new uint256[](accounts.length);
+
+        for (uint i = 0; i < accounts.length; i++) {
+            address account = accounts[i];
+            weights[i] = _getVotes(account, proposalSnapshot(proposalId), params);
+            totalWeight += weights[i];
+        }
+
+        _countAggVotes(proposalId, accounts, weights, support, params);
 
         if (params.length == 0) {
-            emit AggVoteCast(0, proposalId, support, weight, reason);
+            emit AggVoteCast(0, proposalId, support, totalWeight, reason);
         } else {
             emit AggVoteCastWithParams(
                 0,
                 proposalId,
                 support,
-                weight,
+                totalWeight,
                 reason,
                 params
             );
         }
 
-        return weight;
+        return (totalWeight, weights);
     }
 
     /**
