@@ -3,7 +3,7 @@ pragma solidity 0.8.24;
 
 import {BLSLibrary} from "./BLSLibrary.sol";
 
-contract BLS {
+library BLS {
     // Field order for the elliptic curve y^2 = x^3 + 3
     uint256 constant N =
         21888242871839275222246405745257275088696311157297823662689037894645226208583;
@@ -21,12 +21,14 @@ contract BLS {
     // Hash a message to a point on the elliptic curve
     function hashToPoint(
         bytes memory data
-    ) public view returns (uint256[2] memory p) {
+    ) internal view returns (uint256[2] memory p) {
         return mapToPoint(keccak256(data));
     }
 
     // Map a field element to a point on the elliptic curve
-    function mapToPoint(bytes32 _x) public view returns (uint256[2] memory p) {
+    function mapToPoint(
+        bytes32 _x
+    ) internal view returns (uint256[2] memory p) {
         // Convert input to field element, a point on the curve
         uint256 x = uint256(_x) % N;
         uint256 y;
@@ -52,7 +54,7 @@ contract BLS {
         uint256[2] memory signature,
         uint256[4] memory pubkey,
         uint256[2] memory message
-    ) public view returns (bool) {
+    ) internal view returns (bool) {
         uint256[12] memory input = [
             signature[0],
             signature[1],
