@@ -21,6 +21,10 @@ export async function vote(proposalIndex: number) {
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, 'utf-8'));
     const proposalId = proposals[network.config.chainId!][proposalIndex];
 
+    // Get the signer
+    const [signer] = await ethers.getSigners();
+    const signerAddress = await signer.getAddress();
+
     // 0: Against, 1: For, 2: Abstain
     const voteType = 1;
 
@@ -34,16 +38,19 @@ export async function vote(proposalIndex: number) {
 
     console.log("Voting...");
 
-    //Check castVoteWithSig for voting with signature (BLS Agg)
-    const voteTx = await theGovernor.castVoteWithReason(
+    const aggVoteTx = await theGovernor.castVoteWithReasonAndBlsSig(
         proposalId,
+        [signerAddress],
+        sig,
+        pk,
+        msg,
         voteType,
         reason,
         { gasLimit: 1000000 }
     );
 
-    const voteTxReceipt = await voteTx.wait(1);
-    console.log(`Voted with args:\n  - ${voteTxReceipt.events[0].args.join("\n  - ")}`)
+    const aggVoteTxReceipt = await aggVoteTx.wait(1);
+    console.log(`Vote with BLS Agg Signature:\n  - ${aggVoteTxReceipt.events[0].args.join("\n  - ")}`);
 
     if (developmentChains.includes(network.name)) {
         await moveBlock(VOTING_PERIOD + 1);
