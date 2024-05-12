@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "./GovernorCouting.sol";
+import {BLS} from "../bls/BLS.sol";
 import "@openzeppelin/contracts/governance/Governor.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
@@ -114,13 +115,18 @@ contract TheGovernor is
     function castVoteByAggSig(
         uint256 proposalId,
         address[] memory accounts,
+        uint256[2] memory signature,
+        uint256[4] memory pubkey,
+        uint256[2] memory message,
         uint8 support,
         string memory reason,
         bytes memory params
     ) public virtual returns (uint256, uint256[] memory) {
-        bool valid = false;
-
-        // Verify signature
+        bool valid = BLS.verifySingle(
+            signature,
+            pubkey,
+            message
+        );
 
         if (!valid) {
             revert GovernorInvalidAggSignature();
