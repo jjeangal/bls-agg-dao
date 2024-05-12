@@ -1,11 +1,11 @@
 import { ethers } from 'ethers';
 import { toBig, FIELD_ORDER, randHex } from './bls-utils';
-import { hashToField } from './Hash-to-field';
+import { hashToField } from './hash-to-field';
 
 import * as mcl from 'mcl-wasm';
 
-export type mclG2 = any;
-export type mclG1 = any;
+export type mclG2 = mcl.G2;
+export type mclG1 = mcl.G1;
 export type mclFP = any;
 export type mclFR = any;
 export type PublicKey = mclG2;
