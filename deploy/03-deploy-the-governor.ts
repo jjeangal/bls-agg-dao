@@ -36,7 +36,7 @@ const deployTheGovernor: DeployFunction = async function (
         from: deployer,
         args: governorArgs,
         log: true,
-        gasLimit: 4000000,
+        gasLimit: 30000000,
         waitConfirmations: networkConfig[network.name].blockConfirmations || 1
     });
 
