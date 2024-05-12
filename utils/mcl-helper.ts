@@ -43,11 +43,12 @@ export function newKeyPair() {
 }
 
 export function hashToPoint(msg: string) {
+    let hexMsg = msg;
     if (!ethers.utils.isHexString(msg)) {
-        throw new Error('message is expected to be hex string');
+        hexMsg = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(msg));
     }
 
-    const _msg = Uint8Array.from(Buffer.from(msg.slice(2), 'hex'));
+    const _msg = Uint8Array.from(Buffer.from(hexMsg.slice(2), 'hex'));
     const hashRes = hashToField(DOMAIN, _msg, 2);
     const e0 = hashRes[0];
     const e1 = hashRes[1];
