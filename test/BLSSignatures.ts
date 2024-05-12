@@ -30,10 +30,6 @@ describe("BLS Contract", function () {
         let pubkey_ser = mcl.g2ToBN(pubkey);
         let sig_ser = mcl.g1ToBN(signature);
 
-        console.log(message_ser);
-        console.log(pubkey_ser);
-        console.log(sig_ser);
-
         let res = await BLSContract.verifySingle(sig_ser, pubkey_ser, message_ser, { gasLimit: 80000000 });
 
         console.log(res);
