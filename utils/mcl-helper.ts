@@ -4,8 +4,8 @@ import { hashToField } from './hash-to-field';
 
 import * as mcl from 'mcl-wasm';
 
-export type mclG2 = mcl.G2;
-export type mclG1 = mcl.G1;
+export type mclG2 = any;
+export type mclG1 = any;
 export type mclFP = any;
 export type mclFR = any;
 export type PublicKey = mclG2;
@@ -13,6 +13,7 @@ export type SecretKey = mclFR;
 
 export const MAPPING_MODE_TI = 'TI';
 export const MAPPING_MODE_FT = 'FT';
+export const DOMAIN_STR = 'testing-evmbls';
 
 let DOMAIN: Uint8Array;
 
