@@ -20,6 +20,11 @@ export async function queueAndExecute() {
     const satoshi = await ethers.getContractAt(satoshiData.abi, satoshiData.address);
     const theGovernor = await ethers.getContractAt(theGovernorData.abi, theGovernorData.address);
 
+    console.log("Get initial satoshi value")
+    console.log("----------------------------------------------------");
+    let satoshiValue = await satoshi.getSatoshi();
+    console.log(`Old Satoshi value: ${satoshiValue}`);
+
     // Get queue arguments
     const args = [ADDRESS_SATOSHI];
     const encodedFunctionCall = satoshi.interface.encodeFunctionData(
@@ -60,7 +65,7 @@ export async function queueAndExecute() {
 
     console.log("Queue and Execute completed successfully!")
     console.log("----------------------------------------------------");
-    const satoshiValue = await satoshi.getSatoshi();
+    satoshiValue = await satoshi.getSatoshi();
     console.log(`New Satoshi value: ${satoshiValue}`);
 }
 
