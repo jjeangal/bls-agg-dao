@@ -76,4 +76,33 @@ describe("BLS Contract", function () {
         let res = await BLSContract.verifyMultiple(sig_ser, pubkeys, messages);
         assert.strictEqual(res, true);
     });
+
+    it("Should detect an invalid aggregate signature", async function () {
+
+        const message = PROPOSAL_DESCRIPTION;
+
+        const n = 10;
+        let messages = [];
+        let pubkeys = [];
+
+        let aggSignature = mcl.newG1();
+
+        for (let i = 0; i < n; i++) {
+            const { pubkey, secret } = mcl.newKeyPair();
+            const { signature, M } = mcl.sign(message, secret);
+            aggSignature = mcl.aggreagate(aggSignature, signature);
+            messages.push(M);
+            pubkeys.push(pubkey);
+        }
+
+        messages = messages.map((p) => mcl.g1ToBN(p));
+        pubkeys = pubkeys.map((p) => mcl.g2ToBN(p));
+
+        // Change the first public key
+        pubkeys[0] = mcl.g2ToBN(mcl.newKeyPair().pubkey);
+
+        let sig_ser = mcl.g1ToBN(aggSignature);
+        let res = await BLSContract.verifyMultiple(sig_ser, pubkeys, messages);
+        assert.strictEqual(res, false);
+    });
 });
