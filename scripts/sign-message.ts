@@ -9,22 +9,33 @@ export async function signProposalMessage(
     message: string,
     keyPairIndex: number
 ): Promise<{
-    msg: BigNumber[],
-    pk: BigNumber[],
-    sig: BigNumber[]
+    msgs: BigNumber[][],
+    pks: BigNumber[][],
+    aggSig: BigNumber[]
 }> {
     await mcl.init();
     mcl.setDomain(mcl.DOMAIN_STR);
 
-    const keyPair: KeyPair = await getKeyPairAtIndex(keyPairIndex);
+    const keyPairs: KeyPair[] = await getKeyPairsFromLToN(0, keyPairIndex);
 
-    const { signature, M } = mcl.sign(message, keyPair.secret);
+    let messages = [];
+    let pubkeys = [];
 
-    let msg = mcl.g1ToBN(M);
-    let pk = mcl.g2ToBN(keyPair.pubkey);
-    let sig = mcl.g1ToBN(signature);
+    let aggSignature = mcl.newG1();
 
-    return { msg, pk, sig };
+    for (let i = 0; i < keyPairIndex; i++) {
+        const { pubkey, secret } = keyPairs[i];
+        const { signature, M } = mcl.sign(message, secret);
+        aggSignature = mcl.aggreagate(aggSignature, signature);
+        messages.push(M);
+        pubkeys.push(pubkey);
+    }
+
+    const msgs = messages.map((p) => mcl.g1ToBN(p));
+    const pks = pubkeys.map((p) => mcl.g2ToBN(p));
+    const aggSig = mcl.g1ToBN(aggSignature);
+
+    return { msgs, pks, aggSig };
 }
 
 export async function getKeyPairs(): Promise<KeyPair[]> {
@@ -42,4 +53,9 @@ export async function getKeyPairs(): Promise<KeyPair[]> {
 export async function getKeyPairAtIndex(index: number): Promise<KeyPair> {
     const keyPairs = await getKeyPairs();
     return keyPairs[index];
+}
+
+export async function getKeyPairsFromLToN(l: number, n: number): Promise<KeyPair[]> {
+    const keyPairs = await getKeyPairs();
+    return keyPairs.slice(l, n);
 }
