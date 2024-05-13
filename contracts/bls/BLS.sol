@@ -311,12 +311,12 @@ library BLS {
         // solium-disable-next-line security/no-inline-assembly
         assembly {
             success := staticcall(
-                sub(gas(), 2000),
-                8,
-                add(input, 0x20),
-                mul(inputSize, 0x20),
-                out,
-                0x20
+                sub(gas(), 2000), // ensure that there is enough gas left
+                8, // pairing precompile address
+                add(input, 0x20), // Start of input - skip the length field
+                mul(inputSize, 0x20), // Input size * 32 bytes
+                out, // Write the output
+                0x20 // Expect 32 bytes of output
             )
             switch success
             case 0 {
