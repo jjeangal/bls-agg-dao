@@ -41,6 +41,7 @@ contract TheGovernor is
         uint256 numberOfVotes,
         uint256 proposalId,
         uint8 support,
+        uint256 nbVoters,
         uint256 weight,
         string reason
     );
@@ -49,6 +50,7 @@ contract TheGovernor is
         uint256 numberOfVotes,
         uint256 proposalId,
         uint8 support,
+        uint256 nbVoters,
         uint256 weight,
         string reason,
         bytes params
@@ -116,15 +118,15 @@ contract TheGovernor is
         uint256 proposalId,
         address[] memory accounts,
         uint256[2] memory signature,
-        uint256[4] memory pubkey,
-        uint256[2] memory message,
+        uint256[4][] memory pubkeys,
+        uint256[2][] memory messages,
         uint8 support,
         string memory reason
     ) public virtual returns (uint256, uint256[] memory) {
-        bool valid = BLS.verifySingle(
+        bool valid = BLS.verifyMultiple(
             signature,
-            pubkey,
-            message
+            pubkeys,
+            messages
         );
 
         if (!valid) {
@@ -146,7 +148,8 @@ contract TheGovernor is
         );
 
         totalWeight = 0;
-        weights = new uint256[](accounts.length);
+        uint256 nbVoters = accounts.length;
+        weights = new uint256[](nbVoters);
 
         for (uint i = 0; i < accounts.length; i++) {
             address account = accounts[i];
@@ -157,12 +160,13 @@ contract TheGovernor is
         _countAggVotes(proposalId, accounts, weights, support, params);
 
         if (params.length == 0) {
-            emit AggVoteCast(0, proposalId, support, totalWeight, reason);
+            emit AggVoteCast(0, proposalId, support, nbVoters, totalWeight, reason);
         } else {
             emit AggVoteCastWithParams(
                 0,
                 proposalId,
                 support,
+                nbVoters,
                 totalWeight,
                 reason,
                 params
