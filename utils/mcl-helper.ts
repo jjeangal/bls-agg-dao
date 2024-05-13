@@ -115,6 +115,12 @@ export function sign(message: string, secret: mclFR) {
     return { signature, M };
 }
 
+export function aggreagate(acc: mclG1 | mclG2, other: mclG1 | mclG2) {
+    const _acc = mcl.add(acc, other);
+    _acc.normalize();
+    return _acc;
+}
+
 export function setMappingMode(mode: string) {
     if (mode === MAPPING_MODE_FT) {
         mcl.setMapToMode(0);
