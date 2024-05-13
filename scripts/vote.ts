@@ -21,9 +21,17 @@ export async function vote(proposalIndex: number) {
     const proposals = JSON.parse(fs.readFileSync(proposalsFile, 'utf-8'));
     const proposalId = proposals[network.config.chainId!][proposalIndex];
 
-    // Get the signer
-    const [signer] = await ethers.getSigners();
-    const signerAddress = await signer.getAddress();
+    // Number of signers
+    const n = 3;
+
+    // Get the signers addresses
+    const signers = await ethers.getSigners();
+    const signerAddresses = [];
+
+    for (let i = 0; i < n; i++) {
+        const address = await signers[i].getAddress();
+        signerAddresses.push(address);
+    }
 
     // 0: Against, 1: For, 2: Abstain
     const voteType = 1;
@@ -34,16 +42,16 @@ export async function vote(proposalIndex: number) {
     // Set the reason for voting
     const reason = "He his a cryptography expert";
 
-    const { msg, pk, sig } = await signProposalMessage(PROPOSAL_DESCRIPTION, 0);
+    const { msgs, pks, aggSig } = await signProposalMessage(PROPOSAL_DESCRIPTION, n);
 
     console.log("Voting...");
 
     const aggVoteTx = await theGovernor.castVoteWithReasonAndBlsSig(
         proposalId,
-        [signerAddress],
-        sig,
-        pk,
-        msg,
+        signerAddresses,
+        aggSig,
+        pks,
+        msgs,
         voteType,
         reason,
         { gasLimit: 1000000 }
