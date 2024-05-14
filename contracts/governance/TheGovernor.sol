@@ -118,15 +118,15 @@ contract TheGovernor is
         uint256 proposalId,
         address[] memory accounts,
         uint256[2] memory signature,
-        uint256[4][] memory pubkeys,
-        uint256[2][] memory messages,
+        uint256[4] memory pubkeys,
+        uint256[2] memory message,
         uint8 support,
         string memory reason
     ) public virtual returns (uint256, uint256[] memory) {
-        bool valid = BLS.verifyMultiple(
+        bool valid = BLS.verifySingle(
             signature,
             pubkeys,
-            messages
+            message
         );
 
         if (!valid) {
