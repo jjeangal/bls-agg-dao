@@ -9,8 +9,8 @@ export async function signProposalMessage(
     message: string,
     keyPairIndex: number
 ): Promise<{
-    msgs: BigNumber[][],
-    pks: BigNumber[][],
+    msgs: BigNumber[],
+    pks: BigNumber[],
     aggSig: BigNumber[]
 }> {
     await mcl.init();
@@ -18,21 +18,24 @@ export async function signProposalMessage(
 
     const keyPairs: KeyPair[] = await getKeyPairsFromLToN(0, keyPairIndex);
 
-    let messages = [];
-    let pubkeys = [];
-
     let aggSignature = mcl.newG1();
+    let aggPkeys = mcl.newG2();
+
+    let Ms;
 
     for (let i = 0; i < keyPairIndex; i++) {
         const { pubkey, secret } = keyPairs[i];
         const { signature, M } = mcl.sign(message, secret);
         aggSignature = mcl.aggreagate(aggSignature, signature);
-        messages.push(M);
-        pubkeys.push(pubkey);
+        aggPkeys = mcl.aggreagate(aggPkeys, pubkey);
+
+        if (i === 0) {
+            Ms = M;
+        }
     }
 
-    const msgs = messages.map((p) => mcl.g1ToBN(p));
-    const pks = pubkeys.map((p) => mcl.g2ToBN(p));
+    const msgs = mcl.g1ToBN(Ms);
+    const pks = mcl.g2ToBN(aggPkeys);
     const aggSig = mcl.g1ToBN(aggSignature);
 
     return { msgs, pks, aggSig };
