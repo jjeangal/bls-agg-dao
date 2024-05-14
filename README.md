@@ -5,7 +5,7 @@ This DAO protocol allows for on-chain voting with BLS aggregate signature verifi
 ## Features
 
 - **On-chain voting**: Allows for transparent and verifiable voting on the blockchain.
-- **BLS aggregate signature verification**: Uses BLS aggregate signatures to verify votes, reducing the amount of data that needs to be stored on-chain.
+- **BLS aggregate signature verification**: Uses BLS aggregate signatures to verify votes on chain. This approach allows multiple signatures to be combined into a single signature, which can be verified more efficiently than verifying each signature individually.
 - **OpenZeppelin standards**: Follows the best practices and standards set by OpenZeppelin for secure and reliable smart contract development.
 - **Elliptic curve 'alt_bn128'**: Uses the elliptic curve 'alt_bn128' for BLS, which provides a balance of security and efficiency.
 
